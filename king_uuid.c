@@ -188,7 +188,7 @@ PHP_FUNCTION(ku_get_uuid)
 	struct timeval tv;
 	//获得当前时间
 	gettimeofday(&tv,NULL);
-	ku_tmp_time = tv.tv_sec*1000*1000+tv.tv_usec;
+	ku_tmp_time = tv.tv_sec*1000+tv.tv_usec/1000;
 	php_printf("input args:%d\n",pid);
 	ku_uuid |= ku_tmp_time << 13;
 	ku_uuid |= pid << 54;
