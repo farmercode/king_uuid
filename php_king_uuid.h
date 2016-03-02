@@ -46,6 +46,9 @@ PHP_MINFO_FUNCTION(king_uuid);
 
 PHP_FUNCTION(confirm_king_uuid_compiled);	/* For testing, remove later. */
 PHP_FUNCTION(ku_get_uuid);
+
+int get_current_time_count(int64_t current_time);
+
 /* 
   	Declare any global variables you may need between the BEGIN
 	and END macros here:     

@@ -38,6 +38,8 @@ ZEND_DECLARE_MODULE_GLOBALS(king_uuid)
 /* True global resources - no need for thread safety here */
 static int le_king_uuid;
 
+HashTable *inner_time_count;
+
 /* {{{ king_uuid_functions[]
  *
  * Every user visible function must have an entry in king_uuid_functions[].
@@ -101,6 +103,7 @@ PHP_MINIT_FUNCTION(king_uuid)
 	/* If you have INI entries, uncomment these lines 
 	REGISTER_INI_ENTRIES();
 	*/
+	zend_hash_init(inner_time_count,1024,NULL,ZVAL_PTR_DTOR,0);
 	return SUCCESS;
 }
 /* }}} */
@@ -183,17 +186,43 @@ PHP_FUNCTION(ku_get_uuid)
 	if(pid <= 0 ){
 		pid = (int)getpid();
 	}
-	int64_t ku_uuid=1;
+	int64_t ku_uuid;
 	int64_t ku_tmp_time;
 	struct timeval tv;
 	//获得当前时间
 	gettimeofday(&tv,NULL);
 	ku_tmp_time = tv.tv_sec*1000+tv.tv_usec/1000;
 	php_printf("input args:%d\n",pid);
+	ku_uuid = get_current_time_count(ku_tmp_time);
+
 	ku_uuid |= ku_tmp_time << 13;
 	ku_uuid |= pid << 54;
 
 	RETURN_LONG(ku_uuid);
+}
+
+int get_current_time_count(int64_t current_time)
+{
+	int *current_num;
+	zval key;
+	ZVAL_LONG(key,current_time);
+	//将数字变量转化为字符串
+	convert_to_string(&key);
+	char *key_string = key.value.str.val;
+	uint key_len = key.value.str.len;
+	ulong hash_value;
+	hash_value = zend_get_hash_value(key.value.str.val,key.value.str.len);
+	if(zend_hash_quick_exists(inner_time_count,key.value.str.val,key.value.str.len,hash_value)){
+		if(zend_hash_quick_find(inner_time_count,key_string,key_len,hash_value,&current_num) == FAILURE){
+			return 0;
+		}
+		*current_num++;
+		zend_hash_quick_update(inner_time_count,key_string,key_len,hash_value,sizeof(int),null);
+	}else{
+		*current_num = 1;
+		zend_hash_quick_add(inner_time_count,key_string,key_len,hash_value,sizeof(int),null);
+	}
+	return *current_num;
 }
 
 /* }}} */
