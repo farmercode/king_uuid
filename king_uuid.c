@@ -199,17 +199,17 @@ PHP_FUNCTION(ku_get_uuid)
 	//获得当前时间
 	gettimeofday(&tv,NULL);
 	ku_tmp_time = tv.tv_sec*1000+tv.tv_usec/1000;
-#IFDEF USE_KING_UUID_DEBUG
+#ifdef  USE_KING_UUID_DEBUG
 	php_printf("input args:%d\n",pid);
 	php_printf("micro time:%lld\n",ku_tmp_time);
-#ENDIF
+#endif
 	count = get_current_time_count(ku_tmp_time);
 	ku_uuid = (int64_t)count;
 	ku_uuid |= ku_tmp_time << 13;
 	ku_uuid |= pid << 54;
-#IFDEF USE_KING_UUID_DEBUG
+#ifdef USE_KING_UUID_DEBUG
 	php_printf("uuid:%lld\n",ku_uuid);
-#ENDIF
+#endif
 
 	RETURN_LONG(ku_uuid);
 }
