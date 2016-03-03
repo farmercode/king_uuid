@@ -39,7 +39,7 @@ ZEND_DECLARE_MODULE_GLOBALS(king_uuid)
 /* True global resources - no need for thread safety here */
 static int le_king_uuid;
 
-HashTable *inner_time_count;
+static HashTable inner_time_count;
 
 /* {{{ king_uuid_functions[]
  *
@@ -104,9 +104,7 @@ PHP_MINIT_FUNCTION(king_uuid)
 	/* If you have INI entries, uncomment these lines 
 	REGISTER_INI_ENTRIES();
 	*/
-	//分配内存
-	ALLOC_HASHTABLE(inner_time_count);
-	zend_hash_init(inner_time_count,1024,NULL,ZVAL_PTR_DTOR,0);
+	zend_hash_init(&inner_time_count,1024,NULL,ZVAL_PTR_DTOR,0);
 	return SUCCESS;
 }
 /* }}} */
@@ -119,8 +117,7 @@ PHP_MSHUTDOWN_FUNCTION(king_uuid)
 	UNREGISTER_INI_ENTRIES();
 	*/
 	//释放内存
-	zend_hash_destroy(inner_time_count);
-	FREE_HASHTABLE(inner_time_count);
+	zend_hash_destroy(&inner_time_count);
 	return SUCCESS;
 }
 /* }}} */
@@ -225,15 +222,15 @@ int get_current_time_count(int64_t current_time)
 	uint key_len = key.value.str.len;
 	ulong hash_value;
 	hash_value = zend_get_hash_value(key.value.str.val,key.value.str.len);
-	if(zend_hash_quick_exists(inner_time_count,key.value.str.val,key.value.str.len,hash_value)){
-		if(zend_hash_quick_find(inner_time_count,key_string,key_len,hash_value,(void **)&current_num) == FAILURE){
+	if(zend_hash_quick_exists(&inner_time_count,key.value.str.val,key.value.str.len,hash_value)){
+		if(zend_hash_quick_find(&inner_time_count,key_string,key_len,hash_value,(void **)&current_num) == FAILURE){
 			return 0;
 		}
 		*current_num++;
-		zend_hash_quick_update(inner_time_count,key_string,key_len,hash_value,(void *)current_num,sizeof(int),NULL);
+		zend_hash_quick_update(&inner_time_count,key_string,key_len,hash_value,(void *)current_num,sizeof(int),NULL);
 	}else{
 		*current_num = 1;
-		zend_hash_quick_add(inner_time_count,key_string,key_len,hash_value,(void *)current_num,sizeof(int),NULL);
+		zend_hash_quick_add(&inner_time_count,key_string,key_len,hash_value,(void *)current_num,sizeof(int),NULL);
 	}
 	return *current_num;
 }
