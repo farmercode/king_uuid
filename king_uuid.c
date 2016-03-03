@@ -185,6 +185,7 @@ PHP_FUNCTION(confirm_king_uuid_compiled)
 PHP_FUNCTION(ku_get_uuid)
 {
 	int pid =0;
+	int count = 0;
 	if(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,"l",&pid) == FAILURE){
 		return;
 	}
@@ -198,9 +199,12 @@ PHP_FUNCTION(ku_get_uuid)
 	//获得当前时间
 	gettimeofday(&tv,NULL);
 	ku_tmp_time = tv.tv_sec*1000+tv.tv_usec/1000;
+#IFDEF USE_KING_UUID_DEBUG
 	php_printf("input args:%d\n",pid);
-	ku_uuid = (int64_t)get_current_time_count(ku_tmp_time);
-
+	php_printf("micro time:%lld\n",ku_tmp_time);
+#ENDIF
+	count = get_current_time_count(ku_tmp_time);
+	ku_uuid = (int64_t)count;
 	ku_uuid |= ku_tmp_time << 13;
 	ku_uuid |= pid << 54;
 #IFDEF USE_KING_UUID_DEBUG
