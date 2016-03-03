@@ -17,6 +17,9 @@ PHP_ARG_ENABLE(king_uuid, whether to enable king_uuid support,
 dnl Make sure that the comment is aligned:
 [  --enable-king_uuid           Enable king_uuid support])
 
+PHP_ARG_ENABLE(king_uuid-debug, whether to enable debugging support in king_uuid,
+[  --enable-king_uuid-debug        king_uuid: Enable debugging support in king_uuid], no, no)
+
 if test "$PHP_KING_UUID" != "no"; then
   dnl Write more examples of tests here...
 
@@ -39,6 +42,12 @@ if test "$PHP_KING_UUID" != "no"; then
   dnl   AC_MSG_RESULT([not found])
   dnl   AC_MSG_ERROR([Please reinstall the king_uuid distribution])
   dnl fi
+
+  dnl 检测是否启用调试
+  if test "$PHP_KING_UUID_DEBUG" != "no"; then
+    dnl 是，则设置 C 语言宏指令
+    AC_DEFINE(USE_KING_UUID_DEBUG,1,[Include debugging support in king_uuid])
+  fi
 
   dnl # --with-king_uuid -> add include path
   dnl PHP_ADD_INCLUDE($KING_UUID_DIR/include)
