@@ -104,6 +104,8 @@ PHP_MINIT_FUNCTION(king_uuid)
 	/* If you have INI entries, uncomment these lines 
 	REGISTER_INI_ENTRIES();
 	*/
+	//分配内存
+	ALLOC_HASHTABLE(inner_time_count);
 	zend_hash_init(inner_time_count,1024,NULL,ZVAL_PTR_DTOR,0);
 	return SUCCESS;
 }
