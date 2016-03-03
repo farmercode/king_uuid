@@ -30,6 +30,7 @@
 #include <time.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <zend_hash.h>
 
 /* If you declare any globals in php_king_uuid.h uncomment this:
 ZEND_DECLARE_MODULE_GLOBALS(king_uuid)
@@ -193,7 +194,7 @@ PHP_FUNCTION(ku_get_uuid)
 	gettimeofday(&tv,NULL);
 	ku_tmp_time = tv.tv_sec*1000+tv.tv_usec/1000;
 	php_printf("input args:%d\n",pid);
-	ku_uuid = get_current_time_count(ku_tmp_time);
+	ku_uuid = (int64_t)get_current_time_count(ku_tmp_time);
 
 	ku_uuid |= ku_tmp_time << 13;
 	ku_uuid |= pid << 54;
@@ -205,7 +206,7 @@ int get_current_time_count(int64_t current_time)
 {
 	int *current_num;
 	zval key;
-	ZVAL_LONG(key,current_time);
+	ZVAL_LONG(&key,current_time);
 	//将数字变量转化为字符串
 	convert_to_string(&key);
 	char *key_string = key.value.str.val;
@@ -213,14 +214,14 @@ int get_current_time_count(int64_t current_time)
 	ulong hash_value;
 	hash_value = zend_get_hash_value(key.value.str.val,key.value.str.len);
 	if(zend_hash_quick_exists(inner_time_count,key.value.str.val,key.value.str.len,hash_value)){
-		if(zend_hash_quick_find(inner_time_count,key_string,key_len,hash_value,&current_num) == FAILURE){
+		if(zend_hash_quick_find(inner_time_count,key_string,key_len,hash_value,(void **)&current_num) == FAILURE){
 			return 0;
 		}
 		*current_num++;
-		zend_hash_quick_update(inner_time_count,key_string,key_len,hash_value,sizeof(int),null);
+		zend_hash_quick_update(inner_time_count,key_string,key_len,hash_value,(void *)current_num,sizeof(int),NULL);
 	}else{
 		*current_num = 1;
-		zend_hash_quick_add(inner_time_count,key_string,key_len,hash_value,sizeof(int),null);
+		zend_hash_quick_add(inner_time_count,key_string,key_len,hash_value,(void *)current_num,sizeof(int),NULL);
 	}
 	return *current_num;
 }
