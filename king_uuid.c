@@ -203,6 +203,9 @@ PHP_FUNCTION(ku_get_uuid)
 
 	ku_uuid |= ku_tmp_time << 13;
 	ku_uuid |= pid << 54;
+#IFDEF USE_KING_UUID_DEBUG
+	php_printf("uuid:%lld\n",ku_uuid);
+#ENDIF
 
 	RETURN_LONG(ku_uuid);
 }
