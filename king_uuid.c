@@ -118,6 +118,8 @@ PHP_MSHUTDOWN_FUNCTION(king_uuid)
 	/* uncomment this line if you have INI entries
 	UNREGISTER_INI_ENTRIES();
 	*/
+	zend_hash_destroy(inner_time_count);
+	FREE_HASHTABLE(inner_time_count);
 	return SUCCESS;
 }
 /* }}} */
