@@ -14,4 +14,7 @@ $sw_server->set($server_config);
 $sw_server->on('request',function($request,$response){
     $data['uuid'] = ku_get_uuid();
     $response->end(json_encode($data));
+    echo 'new uuid:'.$data['uuid']."\n";
 });
+
+$sw_server->start();
