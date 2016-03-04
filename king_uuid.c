@@ -105,7 +105,7 @@ PHP_MINIT_FUNCTION(king_uuid)
 	REGISTER_INI_ENTRIES();
 	*/
 	ALLOC_HASHTABLE(inner_time_count);
-	zend_hash_init(inner_time_count,1024,NULL,NULL,0);
+	zend_hash_init(inner_time_count,1024,NULL,ZVAL_PTR_DTOR,0);
 	return SUCCESS;
 }
 /* }}} */
