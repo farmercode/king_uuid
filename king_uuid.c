@@ -219,9 +219,10 @@ PHP_FUNCTION(ku_get_uuid)
 
 int get_current_time_count(int64_t current_time)
 {
-	int *current_num;
+	int *current_num,result;
 	zval key;
 	ZVAL_LONG(&key,current_time);
+	current_num = emalloc(sizeof(int));
 	//将数字变量转化为字符串
 	convert_to_string(&key);
 	char *key_string = key.value.str.val;
@@ -238,7 +239,9 @@ int get_current_time_count(int64_t current_time)
 		*current_num = 1;
 		zend_hash_quick_add(inner_time_count,key_string,key_len,hash_value,(void *)current_num,sizeof(int),NULL);
 	}
-	return *current_num;
+	result = *current_num;
+	efree(current_num);
+	return result;
 }
 
 /* }}} */
