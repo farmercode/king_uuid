@@ -8,9 +8,10 @@ $server_config = [
 ];
 $server_host = '0.0.0.0';
 $server_port = 6957;
-$sw_server = new swoole_http_request($server_host,$server_port);
+$sw_server = new swoole_http_server($server_host,$server_port);
+$sw_server->set($server_config);
 
-$sw_server->on('Request',function($request,$response){
+$sw_server->on('request',function($request,$response){
     $data['uuid'] = ku_get_uuid();
     $response->end(json_encode($data));
 });
