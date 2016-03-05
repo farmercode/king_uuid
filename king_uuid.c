@@ -189,7 +189,7 @@ PHP_FUNCTION(ku_get_uuid)
 {
 	int pid =0;
 	int count = 0;
-	if(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,"l",&pid) == FAILURE){
+	if(zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC,"|l",&pid) == FAILURE){
 		return;
 	}
 
