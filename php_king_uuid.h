@@ -24,7 +24,9 @@
 extern zend_module_entry king_uuid_module_entry;
 #define phpext_king_uuid_ptr &king_uuid_module_entry
 
-#define PHP_KING_UUID_VERSION "0.1.0" /* Replace with version number for your extension */
+#define PHP_KING_UUID_VERSION "0.2.0" /* Replace with version number for your extension */
+#define PHP_KING_UUID_AUTHOR_NAME	"dk"
+#define PHP_KING_UUID_AUTHOR_EMAIL "wangchangchun120@gmail.com"
 
 #ifdef PHP_WIN32
 #	define PHP_KING_UUID_API __declspec(dllexport)

@@ -1,6 +1,6 @@
 <?php
 /**
- *配合swoole做的uuid服务
+ *配合swoole做的king_uuid服务
  */
 $server_config = [
     'worker_num' => 4,

@@ -152,6 +152,9 @@ PHP_MINFO_FUNCTION(king_uuid)
 {
 	php_info_print_table_start();
 	php_info_print_table_header(2, "king_uuid support", "enabled");
+	php_info_print_table_header(2,"version",PHP_KING_UUID_VERSION);
+	php_info_print_table_header(2,"author",PHP_KING_UUID_AUTHOR_NAME);
+	php_info_print_table_header(2,"email",PHP_KING_UUID_AUTHOR_EMAIL);
 	php_info_print_table_end();
 
 	/* Remove comments if you have entries in php.ini
